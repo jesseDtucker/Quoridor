@@ -1,0 +1,7 @@
+[submodule "protobuf"]
+	path = protobuf
+	url = https://github.com/jesseDtucker/protobuf.git
+[submodule "boost"]
+	path = boost
+	url = https://github.com/boostorg/boost.git
+	ignore = all
