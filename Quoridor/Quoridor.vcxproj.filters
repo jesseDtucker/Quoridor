@@ -62,5 +62,27 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <Filter Include="Util">
+      <UniqueIdentifier>{a4b58ef0-db1c-455f-ae80-bcff81d4c7b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="QuoridorMain.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.h" />
+    <ClInclude Include="QuoridorMain.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Util\Arc_Assert.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Quoridor_TemporaryKey.pfx" />
   </ItemGroup>
 </Project>
