@@ -45,6 +45,9 @@ namespace Quoridor {
     inline bool operator==(const Point& other) const {
       return other.pos == this->pos;
     }
+    inline bool operator<(const Point& other) const {
+      return this->pos < other.pos;
+    }
   private:
     int8_t pos;
   };
@@ -76,7 +79,8 @@ namespace Quoridor {
   enum MoveType : int8_t {
     MOVE_PIECE = 0,
     PLACE_HORIZONAL_WALL = 1,
-    PLACE_VERTICAL_WALL = 2
+    PLACE_VERTICAL_WALL = 2,
+    JUMP_PIECE = 3
   };
 
   union MoveInfo {
@@ -110,13 +114,37 @@ namespace Quoridor {
     bool operator<(const Wall& other) const;
   };
 
+  const int8_t INVALID_WALL_NUMBER = -1;
+  const int8_t INVALID_WALL_VALUE = -2;
+  const int8_t TWO_BIT_MASK = 0x03;
   class WallsState {
   public:
     WallsState();
 
+    // Provides a list of all moves where walls could be placed without collision.
+    std::vector<Move> availableWallPlacements(Player player) const;
+
     void placeWall(int8_t centerX, int8_t centerY, MoveType type);
     std::vector<Wall> walls() const;
   private:
+
+    inline int8_t wallByteOffset(int8_t pointNumber) const {
+      return pointNumber / 4;
+    }
+
+    inline int8_t wallBitOffset(int8_t pointNumber) const {
+      return (pointNumber % 4) * 2;
+    }
+
+    inline int8_t wallValue(int8_t wallNumber) const {
+      const int8_t byteNumber = wallByteOffset(wallNumber);
+      const int8_t bitOffset = wallBitOffset(wallNumber);
+      if (byteNumber < 0 || byteNumber > _state.size()) {
+        return INVALID_WALL_VALUE;
+      }
+      return (_state[byteNumber] >> bitOffset) & TWO_BIT_MASK;
+    }
+
     std::array<int8_t, BOARD_BYTES> _state;
   };
   
@@ -133,6 +161,10 @@ namespace Quoridor {
     const std::vector<Move> availableMoves(Player player);
     void doMove(const Move& move);
   private:
+    std::vector<Move> availablePieceMovesForPlayer(Player player);
+    std::vector<Move> availableWallPlacementsForPlayer(Player player);
+
+
     Point _playerOnePosition;
     Point _playerTwoPosition;
     WallCounts _playerWalls;
